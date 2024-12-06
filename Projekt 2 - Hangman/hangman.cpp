@@ -11,9 +11,9 @@ string random_word_generator() {
     vector<string> words;
 
     std::ifstream file("words.txt");
-    string rad;
-    while(std::getline(file, rad)) {
-        words.push_back(rad);
+    string line;
+    while(std::getline(file, line)) {
+        words.push_back(line);
     }
 
     int random_word_index = rand() % words.size();
@@ -33,7 +33,7 @@ void hangman_display(int hearts) {
              << "========"
              << endl;
     }else if(hearts == 5){
-        cout << "1 mistakes:\n"
+        cout << endl << "1 mistakes:\n"
              << "  +---+\n"
              << "  |   |\n"
              << "  O   |\n"
@@ -43,7 +43,7 @@ void hangman_display(int hearts) {
              << "========"
              << endl;
     }else if(hearts == 4){
-        cout << "2 mistakes:\n"
+        cout << endl << "2 mistakes:\n"
              << "  +---+\n"
              << "  |   |\n"
              << "  O   |\n"
@@ -53,7 +53,7 @@ void hangman_display(int hearts) {
              << "========"
              << endl;
     }else if(hearts == 3){
-        cout << "3 mistakes:\n"
+        cout << endl << "3 mistakes:\n"
              << "  +---+\n"
              << "  |   |\n"
              << "  O   |\n"
@@ -63,7 +63,7 @@ void hangman_display(int hearts) {
              << "========"
              << endl;
     }else if(hearts == 2){
-        cout << "4 mistakes:\n"
+        cout << endl << "4 mistakes:\n"
              << "  +---+\n"
              << "  |   |\n"
              << "  O   |\n"
@@ -73,7 +73,7 @@ void hangman_display(int hearts) {
              << "========"
              << endl;    
     }else if(hearts == 1){
-        cout << "5 mistakes:\n"
+        cout << endl << "5 mistakes:\n"
              << "  +---+\n"
              << "  |   |\n"
              << "  O   |\n"
@@ -87,12 +87,13 @@ void hangman_display(int hearts) {
 
 
 void guess_word(){
+    vector<char> wrong_guess; 
     string actual_word = random_word_generator();
     string current_guess(actual_word.size(), '?'); 
     int hearts = 6;
     char guess_character;
     cout << current_guess << endl; 
-    cout << hearts << endl;
+    cout << "hearts: " << hearts << endl;
     while(current_guess != actual_word) {
         hangman_display(hearts);
         cout << "Try to guess a character" << endl; 
@@ -102,21 +103,30 @@ void guess_word(){
             if(guess_character == actual_word[i]) {
                 correct_guess = true; 
                 current_guess[i] = guess_character;
+                cout << "hearts: " << hearts << endl;
             }
         }
+        
+        cout << "Your current guess is: " << current_guess << endl;
+        
         if(!correct_guess){
+            wrong_guess.push_back(guess_character);
             cout << "The character: " << guess_character << " is wrong" << endl; 
             hearts--;
             cout << "hearts: " << hearts << endl;
+            cout << "previous guesses: "; 
+            for(char c : wrong_guess){
+                cout << c << " ";
+            }
         }
-        cout << "Your current guess is: " << current_guess << endl;
+        
 
         if(current_guess == actual_word){
-            cout << "Congratulations, you have guess the word!" << endl; 
+            cout << "Congratulations, you have guessed the word!" << endl; 
         }
 
         if(hearts == 0){
-            cout << "You have lost!"  
+            cout << endl << "You have lost!" << endl  
              << "6 mistakes:\n"
              << "  +---+\n"
              << "  |   |\n"
@@ -125,19 +135,19 @@ void guess_word(){
              << " / \\  |\n"
              << "      |\n"
              << "========"             
-            << endl << "the word is " << actual_word << endl; 
+            << endl << "the word is: " << actual_word << endl; 
             break;
         }
     }
 }
 
-void main_function(){
+void game_update(){
   
     srand(static_cast<unsigned int>(time(0)));
     guess_word();
 }
 
 int main() {
-    main_function();
+    game_update();
     return 0;
 }
